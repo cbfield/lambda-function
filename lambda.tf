@@ -67,7 +67,7 @@ resource "aws_lambda_function" "function" {
     for_each = var.vpc_config != null ? toset([1]) : toset([])
 
     content {
-      security_group_ids = var.vpc_config.security_group_ids
+      security_group_ids = concat(var.vpc_config.security_group_ids, try(aws_security_group.security_group.0.id, []))
       subnet_ids         = var.vpc_config.subnet_ids
     }
   }

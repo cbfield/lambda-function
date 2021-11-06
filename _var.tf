@@ -199,10 +199,16 @@ variable "tracing_config" {
 }
 
 variable "vpc_config" {
-  description = "Configurations to connect this function to a VPC"
+  description = <<-EOF
+    Configurations to connect this function to a VPC
+    create_security_group = true will make a dedicated security group to attach to the function (default true)
+    security_group_ids will attach additional security groups to the function
+    subnet_ids are the ids of the subnets that will contain the function
+    EOF
   type = object({
-    security_group_ids = list(string)
-    subnet_ids         = list(string)
+    create_security_group = optional(bool)
+    security_group_ids    = list(string)
+    subnet_ids            = list(string)
   })
   default = null
 }
