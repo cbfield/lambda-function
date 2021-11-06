@@ -28,8 +28,12 @@ resource "aws_lambda_function" "function" {
     }
   }
 
-  environment {
-    variables = var.environment
+  dynamic "environment" {
+    for_each = var.environment != null ? toset([1]) : toset([])
+
+    content {
+      variables = var.environment
+    }
   }
 
   dynamic "file_system_config" {

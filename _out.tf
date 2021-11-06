@@ -63,6 +63,11 @@ output "layers" {
   value       = var.layers
 }
 
+output "log_group" {
+  description = "The Cloudwatch log group used by the function, if enabled"
+  value       = one(aws_cloudwatch_log_group.logs)
+}
+
 output "logging_enabled" {
   description = "The value provided for var.logging_enabled"
   value       = var.logging_enabled
