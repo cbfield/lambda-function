@@ -20,7 +20,7 @@ resource "aws_iam_role" "role" {
 }
 
 resource "aws_iam_role_policy" "role_policy" {
-  for_each = var.role == null && var.role_policies != null ? (
+  for_each = var.role == null ? (
     { for policy in var.role_policies : policy.name => policy }
   ) : {}
 

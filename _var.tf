@@ -110,7 +110,7 @@ variable "publish" {
 
 variable "reserved_concurrent_executions" {
   description = "How many times the function can be executed simultaneously. -1 = no limit, 0 = never execute"
-  type        = string
+  type        = number
   default     = null
 }
 
@@ -127,7 +127,7 @@ variable "role_policies" {
     name_prefix = optional(string)
     policy      = string
   }))
-  default = null
+  default = []
 }
 
 variable "runtime" {
