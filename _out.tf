@@ -1,3 +1,8 @@
+output "aliases" {
+  description = "Aliases used by the function"
+  value       = aws_lambda_alias.alias
+}
+
 output "architectures" {
   description = "The value provided for var.architectures"
   value       = var.architectures

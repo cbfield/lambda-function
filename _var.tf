@@ -1,3 +1,25 @@
+variable "aliases" {
+  description = "Aliases to create for function code versions. Default version is $LATEST"
+  type = list(object({
+    name        = string
+    description = optional(string)
+  }))
+  default = [
+    {
+      name        = "dev"
+      description = "Development"
+    },
+    {
+      name        = "pre-prod"
+      description = "Staged For Release"
+    },
+    {
+      name        = "prod"
+      description = "Production"
+    },
+  ]
+}
+
 variable "architectures" {
   description = "Instruction set architecture for the function"
   type        = list(string)
