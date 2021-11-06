@@ -63,6 +63,11 @@ output "layers" {
   value       = var.layers
 }
 
+output "logging_enabled" {
+  description = "The value provided for var.logging_enabled"
+  value       = var.logging_enabled
+}
+
 output "memory_size" {
   description = "The value provided for var.memory_size"
   value       = var.memory_size

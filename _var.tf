@@ -85,6 +85,12 @@ variable "layers" {
   default     = null
 }
 
+variable "logging_enabled" {
+  description = "Whether or not to create a Cloudwatch log group for this function and grant it the permission to upload logs"
+  type        = bool
+  default     = true
+}
+
 variable "memory_size" {
   description = "Memory in MB to assign to the function. Defaults to 128"
   type        = number

@@ -29,3 +29,26 @@ resource "aws_iam_role_policy" "role_policy" {
   policy      = each.value.policy
   role        = aws_iam_role.role.0.arn
 }
+
+resource "aws_iam_role_policy" "logging" {
+  count = var.logging_enabled ? 1 : 0
+
+  name   = "${var.name}-logging"
+  role   = aws_iam_role.role.0.arn
+  policy = <<-EOF
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Action": [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+          ],
+          "Resource": "arn:aws:logs:*:*:*",
+          "Effect": "Allow"
+        }
+      ]
+    }
+    EOF
+}
