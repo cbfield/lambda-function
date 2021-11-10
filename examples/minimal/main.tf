@@ -9,6 +9,11 @@ module "my_lambda_function" {
   event_source_mappings = [
     {
       event_source_arn = "arn:aws:iam::111222333444:user/whatever"
+    },
+    {
+      self_managed_event_source = {
+        endpoints = { "oof" : "owie", "yikes" : "on-trikes" }
+      }
     }
   ]
 }

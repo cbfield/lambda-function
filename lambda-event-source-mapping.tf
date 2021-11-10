@@ -2,9 +2,10 @@ resource "aws_lambda_event_source_mapping" "mapping" {
   for_each = { for map in var.event_source_mappings : (
     coalesce(
       map.event_source_arn,
-      "" # TODO unique keys for self-managed sources
+      join("_", [for k, v in coalesce(try(map.self_managed_event_source.endpoints, null), {}) : join("-", [k, v])])
     )
-  ) => map }
+    ) => map
+  }
 
   batch_size                         = each.value.batch_size
   bisect_batch_on_function_error     = each.value.bisect_batch_on_function_error
@@ -35,11 +36,9 @@ resource "aws_lambda_event_source_mapping" "mapping" {
   }
 
   dynamic "self_managed_event_source" {
-    for_each = { for source in coalesce(each.value.self_managed_event_sources, []) : (
-      join("-", [for endpoint in source.endpoints : join("-", [endpoint.key, endpoint.value])])
-    ) => source }
+    for_each = each.value.self_managed_event_source != null ? toset([1]) : toset([])
     content {
-      endpoints = self_managed_event_source.value.endpoints
+      endpoints = each.value.self_managed_event_source.endpoints
     }
   }
 

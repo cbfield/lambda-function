@@ -70,9 +70,9 @@ variable "event_source_mappings" {
     maximum_retry_attempts             = optional(number)
     parallelization_factor             = optional(number)
     queues                             = optional(list(string))
-    self_managed_event_sources = optional(list(object({
+    self_managed_event_source = optional(object({
       endpoints = map(string)
-    })))
+    }))
     source_access_configurations = optional(list(object({
       type = string
       uri  = string
