@@ -28,6 +28,11 @@ output "environment" {
   value       = var.environment
 }
 
+output "event_source_mappings" {
+  description = "Event source mappings used by the function"
+  value       = aws_lambda_event_source_mapping.mapping
+}
+
 output "file_system_config" {
   description = "The value provided for var.file_system_config"
   value       = var.file_system_config

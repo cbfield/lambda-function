@@ -52,6 +52,39 @@ variable "environment" {
   default     = null
 }
 
+variable "event_source_mappings" {
+  description = "Source mappings for Lambda to retrieve events from AWS services"
+  type = list(object({
+    batch_size                     = optional(number)
+    bisect_batch_on_function_error = optional(bool)
+    destination_configs = optional(list(object({
+      on_failure = optional(list(object({
+        destination_arn = string
+      })))
+    })))
+    enabled                            = optional(bool)
+    event_source_arn                   = optional(string)
+    function_response_types            = optional(list(string))
+    maximum_batching_window_in_seconds = optional(number)
+    maximum_record_age_in_seconds      = optional(number)
+    maximum_retry_attempts             = optional(number)
+    parallelization_factor             = optional(number)
+    queues                             = optional(list(string))
+    self_managed_event_sources = optional(list(object({
+      endpoints = map(string)
+    })))
+    source_access_configurations = optional(list(object({
+      type = string
+      uri  = string
+    })))
+    starting_position           = optional(string)
+    starting_position_timestamp = optional(string)
+    topics                      = optional(list(string))
+    tumbling_window_in_seconds  = optional(number)
+  }))
+  default = []
+}
+
 variable "file_system_config" {
   description = "Configurations to mount this function to an EFS at runtime"
   type = object({

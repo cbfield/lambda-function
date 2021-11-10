@@ -1,0 +1,53 @@
+resource "aws_lambda_event_source_mapping" "mapping" {
+  for_each = { for map in var.event_source_mappings : (
+    coalesce(
+      map.event_source_arn,
+      "" # TODO unique keys for self-managed sources
+    )
+  ) => map }
+
+  batch_size                         = each.value.batch_size
+  bisect_batch_on_function_error     = each.value.bisect_batch_on_function_error
+  enabled                            = each.value.enabled
+  event_source_arn                   = each.value.event_source_arn
+  function_name                      = aws_lambda_function.function.function_name
+  function_response_types            = each.value.function_response_types
+  maximum_batching_window_in_seconds = each.value.maximum_batching_window_in_seconds
+  maximum_record_age_in_seconds      = each.value.maximum_record_age_in_seconds
+  maximum_retry_attempts             = each.value.maximum_retry_attempts
+  parallelization_factor             = each.value.parallelization_factor
+  queues                             = each.value.queues
+  starting_position                  = each.value.starting_position
+  starting_position_timestamp        = each.value.starting_position_timestamp
+  topics                             = each.value.topics
+  tumbling_window_in_seconds         = each.value.tumbling_window_in_seconds
+
+  dynamic "destination_config" {
+    for_each = { for config in coalesce(each.value.destination_configs, []) : config.on_failure => config }
+    content {
+      dynamic "on_failure" {
+        for_each = { for failure in try(destination_config.on_failure, []) : failure.destination_arn => failure }
+        content {
+          destination_arn = on_failure.value.destination_arn
+        }
+      }
+    }
+  }
+
+  dynamic "self_managed_event_source" {
+    for_each = { for source in coalesce(each.value.self_managed_event_sources, []) : (
+      join("-", [for endpoint in source.endpoints : join("-", [endpoint.key, endpoint.value])])
+    ) => source }
+    content {
+      endpoints = self_managed_event_source.value.endpoints
+    }
+  }
+
+  dynamic "source_access_configuration" {
+    for_each = toset(coalesce(each.value.source_access_configurations, []))
+    content {
+      type = source_access_configuration.value.type
+      uri  = source_access_configuration.value.uri
+    }
+  }
+}
