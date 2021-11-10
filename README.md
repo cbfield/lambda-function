@@ -3,7 +3,6 @@ A Terraform module that creates a Lambda function with an associated API Gateway
 
 # TODO
 
-- event source mappings
 - event invoke config
 - code-signing config?
 - api gateway
