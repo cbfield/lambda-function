@@ -1,5 +1,5 @@
 resource "aws_iam_role" "role" {
-  count = var.role == null ? 1 : 0
+  count = var.role_arn == null ? 1 : 0
 
   name               = var.name
   description        = "Manages permissions for the lambda function ${var.name}"
@@ -26,7 +26,7 @@ resource "aws_iam_role" "role" {
 }
 
 resource "aws_iam_role_policy" "role_policy" {
-  for_each = var.role == null ? (
+  for_each = var.role_arn == null ? (
     { for policy in var.role_policies : policy.name => policy }
   ) : {}
 

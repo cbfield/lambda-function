@@ -12,7 +12,6 @@ resource "aws_lambda_function" "function" {
   package_type                   = var.package_type
   publish                        = var.publish
   reserved_concurrent_executions = var.reserved_concurrent_executions
-  role                           = coalesce(var.role, try(aws_iam_role.role.0.arn, null))
   runtime                        = var.runtime
   s3_bucket                      = var.s3_bucket
   s3_key                         = var.s3_key
@@ -20,8 +19,13 @@ resource "aws_lambda_function" "function" {
   source_code_hash               = var.source_code_hash
   timeout                        = var.timeout
 
+  role = coalesce(
+    var.role_arn,
+    try(aws_iam_role.role.0.arn, null)
+  )
+
   dynamic "dead_letter_config" {
-    for_each = var.dead_letter_config != null ? toset([1]) : toset([])
+    for_each = var.dead_letter_config != null ? [1] : []
 
     content {
       target_arn = var.dead_letter_config.target_arn
@@ -29,7 +33,7 @@ resource "aws_lambda_function" "function" {
   }
 
   dynamic "environment" {
-    for_each = var.environment != null ? toset([1]) : toset([])
+    for_each = var.environment != null ? [1] : []
 
     content {
       variables = var.environment
@@ -37,7 +41,7 @@ resource "aws_lambda_function" "function" {
   }
 
   dynamic "file_system_config" {
-    for_each = var.file_system_config != null ? toset([1]) : toset([])
+    for_each = var.file_system_config != null ? [1] : []
 
     content {
       arn              = var.file_system_config.arn
@@ -46,7 +50,7 @@ resource "aws_lambda_function" "function" {
   }
 
   dynamic "image_config" {
-    for_each = var.image_config != null ? toset([1]) : toset([])
+    for_each = var.image_config != null ? [1] : []
 
     content {
       command           = var.image_config.command
@@ -56,7 +60,7 @@ resource "aws_lambda_function" "function" {
   }
 
   dynamic "tracing_config" {
-    for_each = var.tracing_config != null ? toset([1]) : toset([])
+    for_each = var.tracing_config != null ? [1] : []
 
     content {
       mode = var.tracing_config.mode
@@ -64,11 +68,14 @@ resource "aws_lambda_function" "function" {
   }
 
   dynamic "vpc_config" {
-    for_each = var.vpc_config != null ? toset([1]) : toset([])
+    for_each = var.vpc_config != null ? [1] : []
 
     content {
-      security_group_ids = concat(var.vpc_config.security_group_ids, try(aws_security_group.security_group.0.id, []))
-      subnet_ids         = var.vpc_config.subnet_ids
+      subnet_ids = var.vpc_config.subnet_ids
+      security_group_ids = concat(
+        var.vpc_config.security_group_ids,
+        try(aws_security_group.security_group.0.id, [])
+      )
     }
   }
 

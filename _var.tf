@@ -52,6 +52,14 @@ variable "environment" {
   default     = null
 }
 
+variable "event_invoke_configs" {
+  description = "Asynchronous invocation configurations"
+  type = list(object({
+
+  }))
+  default = []
+}
+
 variable "event_source_mappings" {
   description = "Source mappings for Lambda to retrieve events from AWS services"
   type = list(object({
@@ -175,7 +183,7 @@ variable "reserved_concurrent_executions" {
   default     = null
 }
 
-variable "role" {
+variable "role_arn" {
   description = "A role (ARN) to assign to the function. If not provided, one will be created"
   type        = string
   default     = null

@@ -113,7 +113,7 @@ output "runtime" {
   value       = var.runtime
 }
 
-output "role" {
+output "role_arn" {
   description = "The role created for the function, if one was not provided"
   value       = one(aws_iam_role.role)
 }

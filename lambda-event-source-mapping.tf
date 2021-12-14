@@ -2,7 +2,7 @@ resource "aws_lambda_event_source_mapping" "mapping" {
   for_each = { for map in var.event_source_mappings : (
     coalesce(
       map.event_source_arn,
-      join("_", [for k, v in coalesce(try(map.self_managed_event_source.endpoints, null), {}) : join("-", [k, v])])
+      join(",", [for k, v in coalesce(try(map.self_managed_event_source.endpoints, null), {}) : join(":", [k, v])])
     )
     ) => map
   }
@@ -43,7 +43,7 @@ resource "aws_lambda_event_source_mapping" "mapping" {
   }
 
   dynamic "source_access_configuration" {
-    for_each = toset(coalesce(each.value.source_access_configurations, []))
+    for_each = coalesce(each.value.source_access_configurations, [])
     content {
       type = source_access_configuration.value.type
       uri  = source_access_configuration.value.uri
