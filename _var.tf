@@ -11,7 +11,7 @@ variable "aliases" {
     },
     {
       name        = "pre-prod"
-      description = "Staged for Release"
+      description = "Pre-Production"
     },
     {
       name        = "prod"
@@ -26,10 +26,18 @@ variable "architectures" {
   default     = null
 }
 
-variable "code_signing_config_arn" {
-  description = "ARN of a code-signing configuration to use for the function code"
-  type        = string
-  default     = null
+variable "code_signing_config" {
+  description = <<-EOF
+    Code-Signing configuration to use for the function code.
+    Allowed Publishers must be ARNs of AWS signing profiles
+    Policies can be 'WARN' or 'ENFORCE'.
+  EOF
+  type = object({
+    allowed_publishers = list(string)
+    description        = optional(string)
+    policy             = optional(string)
+  })
+  default = null
 }
 
 variable "dead_letter_config" {

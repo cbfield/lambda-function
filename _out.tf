@@ -8,9 +8,9 @@ output "architectures" {
   value       = var.architectures
 }
 
-output "code_signing_config_arn" {
-  description = "The value provided for var.code_signing_config_arn"
-  value       = var.code_signing_config_arn
+output "code_signing_config" {
+  description = "The code signing configuration created for the function"
+  value       = one(aws_lambda_code_signing_config.config)
 }
 
 output "dead_letter_config" {
@@ -26,6 +26,11 @@ output "description" {
 output "environment" {
   description = "The value provided for var.environment"
   value       = var.environment
+}
+
+output "event_invoke_config" {
+  description = "The value provided for var.event_invoke_config"
+  value       = var.event_invoke_config
 }
 
 output "event_source_mappings" {
