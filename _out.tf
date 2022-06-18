@@ -53,6 +53,11 @@ output "function" {
   value       = aws_lambda_function.function
 }
 
+output "function_urls" {
+  description = "Function URLs created for the function"
+  value       = aws_lambda_function_url.url
+}
+
 output "handler" {
   description = "The value provided for var.handler"
   value       = var.handler

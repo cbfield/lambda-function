@@ -125,6 +125,23 @@ variable "filename" {
   default     = null
 }
 
+variable "function_urls" {
+  description = "HTTPS URLs to expose for the function or its qualifiers"
+  type = list(object({
+    authorization_type = string
+    qualifier          = optional(string)
+    cors = optional(object({
+      allow_credentials = optional(bool)
+      allow_headers     = optional(list(string))
+      allow_methods     = optional(list(string))
+      allow_origins     = optional(list(string))
+      expose_headers    = optional(list(string))
+      max_age           = optional(number)
+    }))
+  }))
+  default = []
+}
+
 variable "handler" {
   description = "Function entrypoint into the code"
   type        = string
