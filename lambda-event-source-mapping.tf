@@ -1,10 +1,13 @@
 resource "aws_lambda_event_source_mapping" "mapping" {
-  for_each = { for map in var.event_source_mappings : (
-    coalesce(
-      map.event_source_arn,
-      join(",", [for k, v in coalesce(try(map.self_managed_event_source.endpoints, null), {}) : join(":", [k, v])])
-    )
-    ) => map
+  for_each = {
+    for source_map in var.event_source_mappings : coalesce(
+      source_map.event_source_arn,
+      join(",", [
+        for k, v in coalesce(
+          try(source_map.self_managed_event_source.endpoints, null), {}
+        ) : join(":", [k, v])
+      ])
+    ) => source_map
   }
 
   batch_size                         = each.value.batch_size

@@ -11,7 +11,7 @@ variable "aliases" {
     },
     {
       name        = "pre-prod"
-      description = "Staged For Release"
+      description = "Staged for Release"
     },
     {
       name        = "prod"
@@ -52,10 +52,16 @@ variable "environment" {
   default     = null
 }
 
-variable "event_invoke_configs" {
+variable "event_invoke_config" {
   description = "Asynchronous invocation configurations"
   type = list(object({
-
+    destination_config = optional(object({
+      on_failure = optional(list(string))
+      on_success = optional(list(string))
+    }))
+    maximum_event_age_in_seconds = optional(number)
+    maximum_retry_attempts       = optional(number)
+    qualifier                    = optional(string)
   }))
   default = []
 }
@@ -94,7 +100,7 @@ variable "event_source_mappings" {
 }
 
 variable "file_system_config" {
-  description = "Configurations to mount this function to an EFS at runtime"
+  description = "Configurations to mount this function to a filesystem at runtime"
   type = object({
     arn              = string
     local_mount_path = string
@@ -171,6 +177,23 @@ variable "package_type" {
   default     = null
 }
 
+variable "permissions" {
+  description = "Grants permission for external sources (S3, Cloudwatch, etc) to access the function"
+  type = list(object({
+    action                 = string
+    event_source_token     = optional(string)
+    function_url_auth_type = optional(string)
+    principal              = string
+    principal_org_id       = optional(string)
+    qualifier              = optional(string)
+    source_account         = optional(string)
+    source_arn             = string
+    statement_id           = optional(string)
+    statement_id_prefix    = optional(string)
+  }))
+  default = []
+}
+
 variable "publish" {
   description = "Whether or not to publish changes as new function versions. Defaults to false"
   type        = bool
@@ -219,7 +242,7 @@ variable "s3_bucket" {
 
 variable "s3_key" {
   description = <<-EOF
-    A path within an S3 bucket to retrieve the deployment package from
+    A path within an S3 bucket at which to retrieve the deployment package
     Conflicts with var.filename and var.image_uri
     EOF
   type        = string
@@ -266,7 +289,7 @@ variable "vpc_config" {
     Configurations to connect this function to a VPC
     create_security_group = true will make a dedicated security group to attach to the function (default true)
     security_group_ids will attach additional security groups to the function
-    subnet_ids are the ids of the subnets that will contain the function
+    subnet_ids are the ids of the subnets that will contain the function's network interfaces
     EOF
   type = object({
     create_security_group = optional(bool)
