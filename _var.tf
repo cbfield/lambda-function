@@ -202,6 +202,15 @@ variable "permissions" {
   default = []
 }
 
+variable "provisioned_concurrency_config" {
+  description = "Provisioned concurrency configurations for the function or some of its qualifiers"
+  type = list(object({
+    qualifier  = string
+    executions = string
+  }))
+  default = []
+}
+
 variable "publish" {
   description = "Whether or not to publish changes as new function versions. Defaults to false"
   type        = bool

@@ -3,6 +3,4 @@ A Terraform module that creates a Lambda function with an associated API Gateway
 
 # TODO
 
-- code-signing config
 - function url
-- provisioned concurrency config

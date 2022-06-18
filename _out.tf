@@ -103,6 +103,11 @@ output "package_type" {
   value       = var.package_type
 }
 
+output "provisioned_concurrency_config" {
+  description = "The value provided for var.provisioned_concurrency_config"
+  value       = var.provisioned_concurrency_config
+}
+
 output "publish" {
   description = "The value provided for var.publish"
   value       = var.publish
