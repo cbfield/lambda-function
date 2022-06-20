@@ -11,7 +11,7 @@ resource "aws_security_group" "security_group" {
     protocol    = "-1"
   }
 
-  tags = {
+  tags = merge(var.tags, {
     "Managed By Terraform" = "true"
-  }
+  })
 }
