@@ -219,6 +219,21 @@ variable "permissions" {
   default = []
 }
 
+variable "private_api_endpoint" {
+  description = <<-EOF
+    Private API Gateway endpoint to create for the function
+    This enables access to the function via HTTPS without exposing it to the internet
+    This will be accessible only via the VPC endpoints provided
+  EOF
+  type = object({
+    authorization = optional(string)
+    qualifiers    = optional(list(string))
+    tags          = optional(map(string))
+    vpce_ids      = list(string)
+  })
+  default = null
+}
+
 variable "provisioned_concurrency_config" {
   description = "Provisioned concurrency configurations for the function or some of its qualifiers"
   type = list(object({

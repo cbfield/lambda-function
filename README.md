@@ -3,5 +3,6 @@ A Terraform module that creates a Lambda function with associated configurations
 
 # TODO
 
-- Private API Gateway endpoints
+- qualifiers and apigw should tolerate single-environment functions
 - Examples
+- "this" ?
