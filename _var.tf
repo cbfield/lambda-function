@@ -4,20 +4,7 @@ variable "aliases" {
     name        = string
     description = optional(string)
   }))
-  default = [
-    {
-      name        = "dev"
-      description = "Development"
-    },
-    {
-      name        = "pre-prod"
-      description = "Pre-Production"
-    },
-    {
-      name        = "prod"
-      description = "Production"
-    },
-  ]
+  default = []
 }
 
 variable "architectures" {
