@@ -17,7 +17,7 @@ resource "aws_api_gateway_rest_api" "api" {
 resource "aws_api_gateway_rest_api_policy" "private_access" {
   count = var.private_api_endpoint != null ? 1 : 0
 
-  rest_api_id = aws_api_gateway_rest_api.api.0.id
+  rest_api_id = aws_api_gateway_rest_api.api[0].id
   policy = templatefile("${path.module}/templates/apigw-rest-api-policy.json.tpl", {
     api_id    = aws_api_gateway_rest_api.api[0].id
     caller_id = data.aws_caller_identity.current.id
@@ -50,7 +50,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
   for_each = var.private_api_endpoint != null ? coalesce(
     var.private_api_endpoint.qualifiers,
     [for alias in var.aliases : alias.name]
-  ) : toset([])
+  ) : []
 
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
